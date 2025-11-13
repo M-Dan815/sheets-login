@@ -10,7 +10,17 @@ const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({origin: true}));
+app.use(
+	cors({
+		origin: [
+			"http://localhost:5173", // Vite default port
+			"http://codepark.net", // production domain (if applicable)
+		],
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+	})
+);
+
 app.use(express.json());
 app.use("/api", authRoutes);
 app.use("/api", databaseRoutes);
