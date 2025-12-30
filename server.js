@@ -15,6 +15,7 @@ app.use(
 		origin: [
 			"http://localhost:5173", // Vite default port
 			"http://codepark.net", // production domain (if applicable)
+			"http://localhost:8080",
 		],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
@@ -22,7 +23,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", databaseRoutes);
 app.use("/api", emailRoutes);
 
