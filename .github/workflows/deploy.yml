@@ -3,39 +3,46 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - main # deploy only on main branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout backend repo
       - name: Checkout Backend
         uses: actions/checkout@v3
 
+      # 2️⃣ Set up SSH key
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DROPLET_SSH_KEY }}
 
+      # 3️⃣ Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t backend-app .
+          docker build -t backend-app ./backend
 
-      - name: Save Docker image as tar
+      # 4️⃣ Save Docker image as tar.gz
+      - name: Save Docker image
         run: |
           docker save backend-app | gzip > backend-app.tar.gz
 
+      # 5️⃣ Ensure remote directory exists & copy tar
       - name: Copy image to droplet
         run: |
-          scp -o StrictHostKeyChecking=no backend-app.tar.gz root@${{ secrets.DROPLET_IP }}:${{ secrets.APP_PATH }}/
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} "mkdir -p /root/backend"
+          scp -o StrictHostKeyChecking=no backend-app.tar.gz root@${{ secrets.DROPLET_IP }}:/root/backend/
 
+      # 6️⃣ Deploy container
       - name: Deploy Docker container
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} << 'EOF'
-            cd $APP_PATH
+            cd /root/backend
             docker load < backend-app.tar.gz
             docker stop backend || true
             docker rm backend || true
-            docker run -d --name backend -p 4000:4000 --restart unless-stopped backend-app
+            docker run -d --name backend -p 5000:5000 --restart unless-stopped backend-app
           EOF
