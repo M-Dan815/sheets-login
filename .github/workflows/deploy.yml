@@ -23,7 +23,7 @@ jobs:
       # 3️⃣ Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t backend-app ./backend
+          docker build -t backend-app .
 
       # 4️⃣ Save Docker image as tar.gz
       - name: Save Docker image
