@@ -27,4 +27,4 @@ app.use("/api/auth", authRoutes);
 app.use("/api", databaseRoutes);
 app.use("/api", emailRoutes);
 
-app.listen(3000, () => console.log("listening on 3000"));
+app.listen(5000, () => console.log("listening on 5000"));
