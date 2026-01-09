@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const databaseRoutes = require("./routes/databaseRoutes");
 const emailRoutes = require("./routes/emailRoutes");
-
+const termsRoutes = require("./routes/terms");
 const app = express();
 app.use(bodyParser.json());
 app.use(
@@ -26,5 +26,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api", databaseRoutes);
 app.use("/api", emailRoutes);
+app.use("/api", termsRoutes);
 
 app.listen(5000, () => console.log("listening on 5000"));
