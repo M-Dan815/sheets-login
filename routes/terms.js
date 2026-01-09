@@ -7,7 +7,7 @@ const path = require("path");
 // Write to the backend directory which is mounted
 const LOG_FILE = path.join(process.cwd(), "logs.txt");
 
-router.post("/api/terms-acceptance", async (req, res) => {
+router.post("/terms-acceptance", async (req, res) => {
 	try {
 		const {fullName, email} = req.body;
 
