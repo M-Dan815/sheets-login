@@ -2,9 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs").promises;
+const path = require("path");
 
-// Define the log file path
-const LOG_FILE = "/home/logs.txt";
+// Write to backend directory (which is likely mounted)
+const LOG_FILE = path.join(__dirname, "..", "logs.txt");
 
 router.post("/terms-acceptance", async (req, res) => {
 	try {
@@ -45,6 +46,7 @@ Email:      ${email}
 IP Address: ${ip}
 Timestamp:  ${timestamp}
 Date:       ${readableDate}
+User Agent: ${acceptanceLog.userAgent}
 ${"=".repeat(80)}
 
 `;
