@@ -55,11 +55,11 @@ exports.search = (req, res) => {
 	}
 
 	// Handle multiple search keys (AND logic - must match ALL terms)
-	// Now includes bio and profile_readme in the search
+	// Searches across full_name, public_email, primary_languages, bio, and profile_readme
 	if (searchKeys.length > 0) {
 		searchKeys.forEach((key) => {
 			query +=
-				" AND (full_name LIKE ? OR email LIKE ? OR primary_languages LIKE ? OR bio LIKE ? OR profile_readme LIKE ?)";
+				" AND (full_name LIKE ? OR public_email LIKE ? OR primary_languages LIKE ? OR bio LIKE ? OR profile_readme LIKE ?)";
 			params.push(`%${key}%`, `%${key}%`, `%${key}%`, `%${key}%`, `%${key}%`);
 		});
 	}
@@ -67,6 +67,7 @@ exports.search = (req, res) => {
 	if (order_by) {
 		const validColumns = [
 			"follower_count",
+			"following_count",
 			"star_count",
 			"repo_count",
 			"twitter_follower_count",
@@ -102,7 +103,7 @@ exports.search = (req, res) => {
 	if (searchKeys.length > 0) {
 		searchKeys.forEach((key) => {
 			countQuery +=
-				" AND (full_name LIKE ? OR email LIKE ? OR primary_languages LIKE ? OR bio LIKE ? OR profile_readme LIKE ?)";
+				" AND (full_name LIKE ? OR public_email LIKE ? OR primary_languages LIKE ? OR bio LIKE ? OR profile_readme LIKE ?)";
 			countParams.push(
 				`%${key}%`,
 				`%${key}%`,
@@ -131,17 +132,19 @@ exports.search = (req, res) => {
 				users__id: item.id,
 				users__username: item.username,
 				users__full_name: item.full_name,
-				users__email: item.email,
+				users__public_email: item.public_email,
 				users__city: item.city,
+				users__bio: item.bio,
 				users__repo_count: item.repo_count,
 				users__star_count: item.star_count,
 				users__follower_count: item.follower_count,
+				users__following_count: item.following_count,
 				users__linkedin_url: item.linkedin_url,
 				users__twitter_url: item.twitter_url,
 				users__twitter_follower_count: item.twitter_follower_count,
-				users__bio: item.bio,
 				users__primary_languages: item.primary_languages,
 				users__profile_readme: item.profile_readme,
+				users__github_created_at: item.github_created_at,
 			}));
 
 			res.json({
